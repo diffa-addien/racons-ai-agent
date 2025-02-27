@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\ClientAgent;
+
+use App\Controllers\BaseController;
 
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -9,25 +11,23 @@ use GeminiAPI\Client;
 use GeminiAPI\Resources\ModelName;
 use GeminiAPI\Resources\Parts\TextPart;
 
-// use GuzzleHttp\Client;
-// use GuzzleHttp\Psr7\Response;
-
-class AIController extends BaseController
+class GeminiAgent extends BaseController
 {
   use ResponseTrait;
 
-  public function index()
+  public function index(): object
   {
-    return view('chat/home');
+    return $this->response->setStatusCode(403)->setJSON(['status' => 'error', 'message' => 'Akses ditolak.']);
   }
 
-  public function geminiAIText()
+  public function responseText()
   {
     // Ambil data JSON dari request
     $json = $this->request->getJSON();
     if (!$json || !isset($json->message)) {
       return $this->failValidationErrors('Pesan tidak ditemukan dalam request.');
     }
+
     $message = $json->message;
 
     $ruleInstruction = 'Follow this rules to answer chat = {
